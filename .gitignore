@@ -32,3 +32,4 @@ projectName.iml
 /build
 /local.properties
 target/
+*.iml
