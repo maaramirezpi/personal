@@ -1,26 +1,27 @@
 package com.ramirez.personal;
 
 import com.ramirez.personal.api.CustomerApi;
+import com.ramirez.personal.domain.CustomerService;
 import com.ramirez.personal.domain.entity.Customer;
 import com.ramirez.personal.model.CustomerDto;
 import com.ramirez.personal.model.CustomerFullDataDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-
 @RestController
 public class CustomerController implements CustomerApi {
 
-  private final HashMap<Long, Customer> customers = new HashMap<>();
   private Long index = 0L;
+
+  @Autowired private CustomerService customerService;
 
   @Override
   public ResponseEntity<CustomerFullDataDto> createCustomer(CustomerDto apiCustomer) {
     Customer customer = new Customer(index, apiCustomer.getFirstName(), apiCustomer.getLastName());
 
-    customers.put(index, customer);
+    customerService.createCustomer(customer);
     index++;
 
     return ResponseEntity.ok(domainToApi(customer));
@@ -28,11 +29,11 @@ public class CustomerController implements CustomerApi {
 
   @Override
   public ResponseEntity<CustomerFullDataDto> getCustomer(Long customerId) {
-    if (customers.containsKey(customerId)) {
-      return ResponseEntity.ok(domainToApi(customers.get(customerId)));
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    return customerService
+        .getCustomer(customerId)
+        .map(this::domainToApi)
+        .map(ResponseEntity::ok)
+        .getOrElse(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
   private CustomerFullDataDto domainToApi(Customer customer) {
