@@ -1,8 +1,8 @@
 package com.ramirez.personal;
 
 import com.ramirez.personal.api.CustomerApi;
-import com.ramirez.personal.domain.CustomerService;
 import com.ramirez.personal.domain.entity.Customer;
+import com.ramirez.personal.domain.service.CustomerService;
 import com.ramirez.personal.model.CustomerDto;
 import com.ramirez.personal.model.CustomerFullDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
