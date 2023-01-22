@@ -1,5 +1,6 @@
 package com.ramirez.personal.application;
 
+import com.ramirez.personal.aspect.LogExecutionTime;
 import com.ramirez.personal.domain.entity.Customer;
 import com.ramirez.personal.domain.port.PersistencePort;
 import io.vavr.control.Option;
@@ -12,6 +13,7 @@ public class DatabaseAdapter implements PersistencePort {
   @Autowired private CustomerRepository customerRepository;
 
   @Override
+  @LogExecutionTime
   public Customer saveCustomer(Customer customer) {
     CustomerEntity customerEntity =
         CustomerEntity.builder()
@@ -25,6 +27,7 @@ public class DatabaseAdapter implements PersistencePort {
   }
 
   @Override
+  @LogExecutionTime
   public Option<Customer> getCustomer(Long customerId) {
     return Option.ofOptional(
         customerRepository.findById(customerId).map(CustomerEntity::toDomainEntity));
