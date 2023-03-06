@@ -1,4 +1,4 @@
-package com.ramirez.personal.application;
+package com.ramirez.personal.application.postgres;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -25,7 +25,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/CustomerFullData'
+                $ref: '#/components/schemas/Customer'
   /customer/{customerId}:
     get:
       tags:
@@ -45,7 +45,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/CustomerFullData'
+                $ref: '#/components/schemas/Customer'
         '404':
           description: NOT FOUND
 components:
@@ -53,19 +53,12 @@ components:
     Customer:
       type: object
       properties:
+        id:
+          type: number
+          description: Id of the customer
         firstName:
           type: string
           description: First name of the customer
         lastName:
           type: string
           description: Last name of the customer
-    CustomerFullData:
-      allOf:
-        - $ref: '#/components/schemas/Customer'
-        - type: object
-          properties:
-            customerId:
-              type: integer
-              description: The ID of the customer
-              format: int64
-      description: Full data of the customer.

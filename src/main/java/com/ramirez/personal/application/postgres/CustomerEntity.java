@@ -1,4 +1,4 @@
-package com.ramirez.personal.application;
+package com.ramirez.personal.application.postgres;
 
 import com.ramirez.personal.domain.entity.Customer;
 import lombok.AllArgsConstructor;
