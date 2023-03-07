@@ -21,9 +21,9 @@ public class CustomerController implements CustomerApi {
         new Customer(
             apiCustomer.getId().longValue(), apiCustomer.getFirstName(), apiCustomer.getLastName());
 
-    customerService.createCustomer(customer);
+    Customer savedCustomer = customerService.createCustomer(customer);
 
-    return ResponseEntity.ok(domainToApi(customer));
+    return ResponseEntity.ok(domainToApi(savedCustomer));
   }
 
   @Override
