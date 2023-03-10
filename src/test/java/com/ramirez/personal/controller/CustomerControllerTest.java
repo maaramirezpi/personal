@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ramirez.personal.CustomerController;
 import com.ramirez.personal.domain.entity.Customer;
 import com.ramirez.personal.domain.service.CustomerService;
-import com.ramirez.personal.model.CustomerDto;
+import com.ramirez.personal.generated.model.CustomerDto;
 import io.vavr.control.Option;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

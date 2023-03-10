@@ -1,9 +1,9 @@
 package com.ramirez.personal;
 
-import com.ramirez.personal.api.CustomerApi;
 import com.ramirez.personal.domain.entity.Customer;
 import com.ramirez.personal.domain.service.CustomerService;
-import com.ramirez.personal.model.CustomerDto;
+import com.ramirez.personal.generated.api.CustomerApi;
+import com.ramirez.personal.generated.model.CustomerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
