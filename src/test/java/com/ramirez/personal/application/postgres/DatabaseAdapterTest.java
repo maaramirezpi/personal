@@ -30,7 +30,7 @@ class DatabaseAdapterTest {
   void saveCustomer() {
     CustomerEntity customerEntity = getCustomerEntity();
     Customer customer = getDomainCustomer();
-    //TODO: we can add a captor here
+    // TODO: we can add a captor here
 
     when(customerRepository.save(any())).thenReturn(customerEntity);
 
