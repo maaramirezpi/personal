@@ -13,6 +13,8 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -20,6 +22,7 @@ class DatabaseAdapterTest {
 
   @Mock private CustomerRepository customerRepository;
   @InjectMocks private DatabaseAdapter databaseAdapter;
+  @Captor private ArgumentCaptor<CustomerEntity> customerEntityArgumentCaptor;
 
   @BeforeEach
   void setUp() {
@@ -32,14 +35,20 @@ class DatabaseAdapterTest {
     Customer customer = getDomainCustomer();
     // TODO: we can add a captor here
 
-    when(customerRepository.save(any())).thenReturn(customerEntity);
+    when(customerRepository.save(customerEntityArgumentCaptor.capture())).thenReturn(customerEntity);
 
     Either<DomainError, Customer> customerResponse = databaseAdapter.saveCustomer(customer);
 
+    //Assert response
     assertTrue(customerResponse.isRight());
     assertEquals(customerEntity.getId(), customerResponse.get().customerId());
     assertEquals(customerEntity.getLastName(), customerResponse.get().lastName());
     assertEquals(customerEntity.getFirstName(), customerResponse.get().firstName());
+
+    //Assert argument captor
+    assertEquals(customer.customerId(), customerEntityArgumentCaptor.getValue().getId());
+    assertEquals(customer.firstName(), customerEntityArgumentCaptor.getValue().getFirstName());
+    assertEquals(customer.lastName(), customerEntityArgumentCaptor.getValue().getLastName());
   }
 
   @Test
