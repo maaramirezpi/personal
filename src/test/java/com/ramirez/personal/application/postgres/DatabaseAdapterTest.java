@@ -33,19 +33,19 @@ class DatabaseAdapterTest {
   void saveCustomer() {
     CustomerEntity customerEntity = getCustomerEntity();
     Customer customer = getDomainCustomer();
-    // TODO: we can add a captor here
 
-    when(customerRepository.save(customerEntityArgumentCaptor.capture())).thenReturn(customerEntity);
+    when(customerRepository.save(customerEntityArgumentCaptor.capture()))
+        .thenReturn(customerEntity);
 
     Either<DomainError, Customer> customerResponse = databaseAdapter.saveCustomer(customer);
 
-    //Assert response
+    // Assert response
     assertTrue(customerResponse.isRight());
     assertEquals(customerEntity.getId(), customerResponse.get().customerId());
     assertEquals(customerEntity.getLastName(), customerResponse.get().lastName());
     assertEquals(customerEntity.getFirstName(), customerResponse.get().firstName());
 
-    //Assert argument captor
+    // Assert argument captor
     assertEquals(customer.customerId(), customerEntityArgumentCaptor.getValue().getId());
     assertEquals(customer.firstName(), customerEntityArgumentCaptor.getValue().getFirstName());
     assertEquals(customer.lastName(), customerEntityArgumentCaptor.getValue().getLastName());
