@@ -4,16 +4,17 @@ import com.ramirez.personal.domain.entity.Customer;
 import com.ramirez.personal.domain.service.CustomerService;
 import com.ramirez.personal.generated.api.CustomerApi;
 import com.ramirez.personal.generated.model.CustomerDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import java.math.BigDecimal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-
 @RestController
 public class CustomerController implements CustomerApi {
-  @Autowired private CustomerService customerService;
+  private final CustomerService customerService;
+
+  public CustomerController(CustomerService customerService) {
+    this.customerService = customerService;
+  }
 
   @Override
   public ResponseEntity<CustomerDto> createCustomer(CustomerDto apiCustomer) {
@@ -21,9 +22,11 @@ public class CustomerController implements CustomerApi {
         new Customer(
             apiCustomer.getId().longValue(), apiCustomer.getFirstName(), apiCustomer.getLastName());
 
-    Customer savedCustomer = customerService.createCustomer(customer);
-
-    return ResponseEntity.ok(domainToApi(savedCustomer));
+    return customerService
+        .createCustomer(customer)
+        .fold(
+            domainError -> ResponseEntity.internalServerError().build(),
+            customer1 -> ResponseEntity.ok(domainToApi(customer1)));
   }
 
   @Override
@@ -32,7 +35,7 @@ public class CustomerController implements CustomerApi {
         .getCustomer(customerId)
         .map(this::domainToApi)
         .map(ResponseEntity::ok)
-        .getOrElse(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        .getOrElse(() -> ResponseEntity.notFound().build());
   }
 
   private CustomerDto domainToApi(Customer customer) {

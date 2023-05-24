@@ -4,7 +4,6 @@ import com.ramirez.personal.aspect.LogExecutionTime;
 import com.ramirez.personal.domain.entity.Customer;
 import com.ramirez.personal.domain.port.MessagePort;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -15,10 +14,14 @@ import org.springframework.util.concurrent.ListenableFuture;
 @Slf4j
 public class KafkaProducerAdapter implements MessagePort {
 
-  @Autowired private KafkaTemplate<String, String> kafkaTemplate;
+  private final KafkaTemplate<String, String> kafkaTemplate;
 
   @Value(value = "${spring.kafka.topic}")
   private String topic;
+
+  public KafkaProducerAdapter(KafkaTemplate<String, String> kafkaTemplate) {
+    this.kafkaTemplate = kafkaTemplate;
+  }
 
   @Override
   @LogExecutionTime

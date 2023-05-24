@@ -50,6 +50,7 @@ paths:
           description: NOT FOUND
 components:
   schemas:
+#    TODO: how to fail is values are sent but with null?
     Customer:
       type: object
       properties:
@@ -62,3 +63,7 @@ components:
         lastName:
           type: string
           description: Last name of the customer
+      required:
+        - id
+        - firstName
+        - lastName
