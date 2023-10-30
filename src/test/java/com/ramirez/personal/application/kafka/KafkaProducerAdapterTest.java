@@ -17,11 +17,11 @@ class KafkaProducerAdapterTest {
   @BeforeEach
   void setUp() {
     openMocks(this);
-    }
+  }
 
   @Test
   void sendCustomer() {
-    //TODO lets think about this later
+    // TODO lets think about this later
     /*new SendResult<String, String>(new ProducerRecord("topic", "value"), new RecordMetadata())
     new ListenableFutureTask()
     when(template.send(any(), any())).thenReturn()*/

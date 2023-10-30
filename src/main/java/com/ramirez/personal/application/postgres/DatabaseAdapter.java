@@ -20,6 +20,7 @@ public class DatabaseAdapter implements PersistencePort {
 
   @Override
   @LogExecutionTime
+  // @Cacheable(value = CacheConfig.CACHE_CUSTOMER)
   public Either<DomainError, Customer> saveCustomer(Customer customer) {
     return Try.of(
             () -> {
@@ -38,6 +39,7 @@ public class DatabaseAdapter implements PersistencePort {
 
   @Override
   @LogExecutionTime
+  // @Cacheable(value = CacheConfig.CACHE_CUSTOMER)
   public Option<Customer> getCustomer(Long customerId) {
     return Option.ofOptional(
         customerRepository.findById(customerId).map(CustomerEntity::toDomainEntity));
