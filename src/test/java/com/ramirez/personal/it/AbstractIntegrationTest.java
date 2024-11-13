@@ -40,7 +40,7 @@ public abstract class AbstractIntegrationTest {
     // is probably not a good idea in prod
     kafka = new KafkaContainer(KAFKA_IMAGE);
 
-    Stream.of(postgres).parallel().forEach(GenericContainer::start);
+    Stream.of(postgres, kafka).parallel().forEach(GenericContainer::start);
 
     log.info("🐳 TestContainers started in {}", Duration.between(start, Instant.now()));
   }

@@ -1,0 +1,22 @@
+name: Build & Test
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Build
+        run: mvn clean compile
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Build
+        run: mvn clean compile
+      - name: Test
+        run: mvn test

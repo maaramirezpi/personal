@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 @AutoConfigureMockMvc
-@Disabled
+//@Disabled
 class CustomerItTest extends AbstractIntegrationTest {
 
   @Autowired private MockMvc mvc;
