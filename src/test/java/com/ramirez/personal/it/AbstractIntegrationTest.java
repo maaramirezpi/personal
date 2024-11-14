@@ -34,10 +34,7 @@ public abstract class AbstractIntegrationTest {
 		postgres = new PostgreSQLContainer<>(POSTGRES_IMAGE).withDatabaseName("it_postgres")
 			.withUsername("fakeUsername")
 			.withPassword("fakePassword")
-			.waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*\\s", 2))
-		// .withCommand("--character-set-server=utf8mb4",
-		// "--collation-server=utf8mb4_unicode_ci")
-		;
+			.waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*\\s", 2));
 
 		// TODO: this needs to create the topic beforehand, or add the configuration to
 		// create it which
