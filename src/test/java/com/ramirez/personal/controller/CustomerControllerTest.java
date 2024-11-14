@@ -27,115 +27,98 @@ import org.springframework.test.web.servlet.MvcResult;
 @WebMvcTest(CustomerController.class)
 class CustomerControllerTest {
 
-  @Autowired private MockMvc mvc;
+	@Autowired
+	private MockMvc mvc;
 
-  @MockBean private CustomerService customerService;
+	@MockBean
+	private CustomerService customerService;
 
-  @Autowired private ObjectMapper mapper;
+	@Autowired
+	private ObjectMapper mapper;
 
-  @Test
-  void createCustomer() throws Exception {
-    CustomerDto customerDto = new CustomerDto();
-    customerDto.setId(BigDecimal.valueOf(0));
-    customerDto.setFirstName("Manuel");
-    customerDto.setLastName("Ramirez");
+	@Test
+	void createCustomer() throws Exception {
+		CustomerDto customerDto = new CustomerDto();
+		customerDto.setId(BigDecimal.valueOf(0));
+		customerDto.setFirstName("Manuel");
+		customerDto.setLastName("Ramirez");
 
-    when(customerService.createCustomer(any()))
-        .thenReturn(
-            Either.right(
-                new Customer(
-                    customerDto.getId().longValue(),
-                    customerDto.getFirstName(),
-                    customerDto.getLastName())));
+		when(customerService.createCustomer(any())).thenReturn(Either.right(
+				new Customer(customerDto.getId().longValue(), customerDto.getFirstName(), customerDto.getLastName())));
 
-    MvcResult result =
-        mvc.perform(
-                post("/customer")
-                    .content(mapper.writeValueAsString(customerDto))
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn();
+		MvcResult result = mvc
+			.perform(post("/customer").content(mapper.writeValueAsString(customerDto))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andReturn();
 
-    CustomerDto resultDto =
-        mapper.readValue(result.getResponse().getContentAsString(), CustomerDto.class);
+		CustomerDto resultDto = mapper.readValue(result.getResponse().getContentAsString(), CustomerDto.class);
 
-    assertEquals(customerDto.getId(), resultDto.getId());
-    assertEquals(customerDto.getFirstName(), resultDto.getFirstName());
-    assertEquals(customerDto.getLastName(), resultDto.getLastName());
-  }
+		assertEquals(customerDto.getId(), resultDto.getId());
+		assertEquals(customerDto.getFirstName(), resultDto.getFirstName());
+		assertEquals(customerDto.getLastName(), resultDto.getLastName());
+	}
 
-  @Test
-  void createCustomer_domainError() throws Exception {
-    CustomerDto customerDto = new CustomerDto();
-    customerDto.setId(BigDecimal.valueOf(0));
-    customerDto.setFirstName("Manuel");
-    customerDto.setLastName("Ramirez");
+	@Test
+	void createCustomer_domainError() throws Exception {
+		CustomerDto customerDto = new CustomerDto();
+		customerDto.setId(BigDecimal.valueOf(0));
+		customerDto.setFirstName("Manuel");
+		customerDto.setLastName("Ramirez");
 
-    when(customerService.createCustomer(any()))
-        .thenReturn(
-            Either.left(new DomainError("E-001", "Exception while trying to save customer")));
+		when(customerService.createCustomer(any()))
+			.thenReturn(Either.left(new DomainError("E-001", "Exception while trying to save customer")));
 
-    mvc.perform(
-            post("/customer")
-                .content(mapper.writeValueAsString(customerDto))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().is5xxServerError())
-        .andReturn();
-  }
+		mvc.perform(post("/customer").content(mapper.writeValueAsString(customerDto))
+			.contentType(MediaType.APPLICATION_JSON)).andExpect(status().is5xxServerError()).andReturn();
+	}
 
-  @Test
-  void createCustomer_validationError() throws Exception {
-    mvc.perform(post("/customer").content("malformed").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest());
+	@Test
+	void createCustomer_validationError() throws Exception {
+		mvc.perform(post("/customer").content("malformed").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isBadRequest());
 
-    /*CustomerDto customerDto = new CustomerDto();
+		/*
+		 * CustomerDto customerDto = new CustomerDto();
+		 *
+		 * mvc.perform( post("/customer") .content(mapper.writeValueAsString(customerDto))
+		 * .contentType(MediaType.APPLICATION_JSON)) .andExpect(status().isBadRequest());
+		 */
+	}
 
-    mvc.perform(
-            post("/customer")
-                .content(mapper.writeValueAsString(customerDto))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest());*/
-  }
+	@Test
+	void getCustomer() throws Exception {
+		CustomerDto customerDto = new CustomerDto();
+		customerDto.setId(BigDecimal.valueOf(0));
+		customerDto.setFirstName("Manuel");
+		customerDto.setLastName("Ramirez");
 
-  @Test
-  void getCustomer() throws Exception {
-    CustomerDto customerDto = new CustomerDto();
-    customerDto.setId(BigDecimal.valueOf(0));
-    customerDto.setFirstName("Manuel");
-    customerDto.setLastName("Ramirez");
+		when(customerService.getCustomer(any())).thenReturn(Option
+			.of(new Customer(customerDto.getId().longValue(), customerDto.getFirstName(), customerDto.getLastName())));
 
-    when(customerService.getCustomer(any()))
-        .thenReturn(
-            Option.of(
-                new Customer(
-                    customerDto.getId().longValue(),
-                    customerDto.getFirstName(),
-                    customerDto.getLastName())));
+		MvcResult result = mvc.perform(get("/customer/0").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andReturn();
 
-    MvcResult result =
-        mvc.perform(get("/customer/0").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn();
+		CustomerDto resultDto = mapper.readValue(result.getResponse().getContentAsString(), CustomerDto.class);
 
-    CustomerDto resultDto =
-        mapper.readValue(result.getResponse().getContentAsString(), CustomerDto.class);
+		assertEquals(customerDto.getId(), resultDto.getId());
+		assertEquals(customerDto.getFirstName(), resultDto.getFirstName());
+		assertEquals(customerDto.getLastName(), resultDto.getLastName());
+	}
 
-    assertEquals(customerDto.getId(), resultDto.getId());
-    assertEquals(customerDto.getFirstName(), resultDto.getFirstName());
-    assertEquals(customerDto.getLastName(), resultDto.getLastName());
-  }
+	@Test
+	void getCustomer_NotFound() throws Exception {
+		CustomerDto customerDto = new CustomerDto();
+		customerDto.setId(BigDecimal.valueOf(0));
+		customerDto.setFirstName("Manuel");
+		customerDto.setLastName("Ramirez");
 
-  @Test
-  void getCustomer_NotFound() throws Exception {
-    CustomerDto customerDto = new CustomerDto();
-    customerDto.setId(BigDecimal.valueOf(0));
-    customerDto.setFirstName("Manuel");
-    customerDto.setLastName("Ramirez");
+		when(customerService.getCustomer(any())).thenReturn(Option.none());
 
-    when(customerService.getCustomer(any())).thenReturn(Option.none());
+		mvc.perform(get("/customer/0").contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound())
+			.andReturn();
+	}
 
-    mvc.perform(get("/customer/0").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound())
-        .andReturn();
-  }
 }

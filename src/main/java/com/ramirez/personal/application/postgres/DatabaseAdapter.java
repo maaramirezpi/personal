@@ -12,34 +12,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseAdapter implements PersistencePort {
 
-  private final CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 
-  public DatabaseAdapter(CustomerRepository customerRepository) {
-    this.customerRepository = customerRepository;
-  }
+	public DatabaseAdapter(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
 
-  @Override
-  @LogExecutionTime
-  public Either<DomainError, Customer> saveCustomer(Customer customer) {
-    return Try.of(
-            () -> {
-              CustomerEntity customerEntity =
-                  CustomerEntity.builder()
-                      .id(customer.customerId())
-                      .firstName(customer.firstName())
-                      .lastName(customer.lastName())
-                      .build();
+	@Override
+	@LogExecutionTime
+	public Either<DomainError, Customer> saveCustomer(Customer customer) {
+		return Try.of(() -> {
+			CustomerEntity customerEntity = CustomerEntity.builder()
+				.id(customer.customerId())
+				.firstName(customer.firstName())
+				.lastName(customer.lastName())
+				.build();
 
-              CustomerEntity savedCustomer = customerRepository.save(customerEntity);
-              return savedCustomer.toDomainEntity();
-            })
-        .toEither(new DomainError("E-001", "Exception while trying to save customer"));
-  }
+			CustomerEntity savedCustomer = customerRepository.save(customerEntity);
+			return savedCustomer.toDomainEntity();
+		}).toEither(new DomainError("E-001", "Exception while trying to save customer"));
+	}
 
-  @Override
-  @LogExecutionTime
-  public Option<Customer> getCustomer(Long customerId) {
-    return Option.ofOptional(
-        customerRepository.findById(customerId).map(CustomerEntity::toDomainEntity));
-  }
+	@Override
+	@LogExecutionTime
+	public Option<Customer> getCustomer(Long customerId) {
+		return Option.ofOptional(customerRepository.findById(customerId).map(CustomerEntity::toDomainEntity));
+	}
+
 }

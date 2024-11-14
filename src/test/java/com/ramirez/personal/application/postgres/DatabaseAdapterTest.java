@@ -20,56 +20,61 @@ import org.mockito.Mock;
 
 class DatabaseAdapterTest {
 
-  @Mock private CustomerRepository customerRepository;
-  @InjectMocks private DatabaseAdapter databaseAdapter;
-  @Captor private ArgumentCaptor<CustomerEntity> customerEntityArgumentCaptor;
+	@Mock
+	private CustomerRepository customerRepository;
 
-  @BeforeEach
-  void setUp() {
-    openMocks(this);
-  }
+	@InjectMocks
+	private DatabaseAdapter databaseAdapter;
 
-  @Test
-  void saveCustomer() {
-    CustomerEntity customerEntity = getCustomerEntity();
-    Customer customer = getDomainCustomer();
+	@Captor
+	private ArgumentCaptor<CustomerEntity> customerEntityArgumentCaptor;
 
-    when(customerRepository.save(customerEntityArgumentCaptor.capture()))
-        .thenReturn(customerEntity);
+	@BeforeEach
+	void setUp() {
+		openMocks(this);
+	}
 
-    Either<DomainError, Customer> customerResponse = databaseAdapter.saveCustomer(customer);
+	@Test
+	void saveCustomer() {
+		CustomerEntity customerEntity = getCustomerEntity();
+		Customer customer = getDomainCustomer();
 
-    // Assert response
-    assertTrue(customerResponse.isRight());
-    assertEquals(customerEntity.getId(), customerResponse.get().customerId());
-    assertEquals(customerEntity.getLastName(), customerResponse.get().lastName());
-    assertEquals(customerEntity.getFirstName(), customerResponse.get().firstName());
+		when(customerRepository.save(customerEntityArgumentCaptor.capture())).thenReturn(customerEntity);
 
-    // Assert argument captor
-    assertEquals(customer.customerId(), customerEntityArgumentCaptor.getValue().getId());
-    assertEquals(customer.firstName(), customerEntityArgumentCaptor.getValue().getFirstName());
-    assertEquals(customer.lastName(), customerEntityArgumentCaptor.getValue().getLastName());
-  }
+		Either<DomainError, Customer> customerResponse = databaseAdapter.saveCustomer(customer);
 
-  @Test
-  void getCustomer() {
-    CustomerEntity customerEntity = getCustomerEntity();
-    when(customerRepository.findById(any())).thenReturn(Optional.of(customerEntity));
+		// Assert response
+		assertTrue(customerResponse.isRight());
+		assertEquals(customerEntity.getId(), customerResponse.get().customerId());
+		assertEquals(customerEntity.getLastName(), customerResponse.get().lastName());
+		assertEquals(customerEntity.getFirstName(), customerResponse.get().firstName());
 
-    Option<Customer> customer = databaseAdapter.getCustomer(10l);
+		// Assert argument captor
+		assertEquals(customer.customerId(), customerEntityArgumentCaptor.getValue().getId());
+		assertEquals(customer.firstName(), customerEntityArgumentCaptor.getValue().getFirstName());
+		assertEquals(customer.lastName(), customerEntityArgumentCaptor.getValue().getLastName());
+	}
 
-    assertTrue(customer.isDefined());
-    assertEquals(customerEntity.getId(), customer.get().customerId());
-    assertEquals(customerEntity.getFirstName(), customer.get().firstName());
-    assertEquals(customerEntity.getLastName(), customer.get().lastName());
-  }
+	@Test
+	void getCustomer() {
+		CustomerEntity customerEntity = getCustomerEntity();
+		when(customerRepository.findById(any())).thenReturn(Optional.of(customerEntity));
 
-  @NotNull
-  private static Customer getDomainCustomer() {
-    return new Customer(10l, "Manuel", "Ramirez");
-  }
+		Option<Customer> customer = databaseAdapter.getCustomer(10l);
 
-  private static CustomerEntity getCustomerEntity() {
-    return CustomerEntity.builder().id(10l).firstName("Manuel").lastName("Ramirez").build();
-  }
+		assertTrue(customer.isDefined());
+		assertEquals(customerEntity.getId(), customer.get().customerId());
+		assertEquals(customerEntity.getFirstName(), customer.get().firstName());
+		assertEquals(customerEntity.getLastName(), customer.get().lastName());
+	}
+
+	@NotNull
+	private static Customer getDomainCustomer() {
+		return new Customer(10l, "Manuel", "Ramirez");
+	}
+
+	private static CustomerEntity getCustomerEntity() {
+		return CustomerEntity.builder().id(10l).firstName("Manuel").lastName("Ramirez").build();
+	}
+
 }

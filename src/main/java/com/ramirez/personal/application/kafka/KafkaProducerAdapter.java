@@ -14,23 +14,23 @@ import org.springframework.util.concurrent.ListenableFuture;
 @Slf4j
 public class KafkaProducerAdapter implements MessagePort {
 
-  private final KafkaTemplate<String, String> kafkaTemplate;
+	private final KafkaTemplate<String, String> kafkaTemplate;
 
-  @Value(value = "${spring.kafka.topic}")
-  private String topic;
+	@Value(value = "${spring.kafka.topic}")
+	private String topic;
 
-  public KafkaProducerAdapter(KafkaTemplate<String, String> kafkaTemplate) {
-    this.kafkaTemplate = kafkaTemplate;
-  }
+	public KafkaProducerAdapter(KafkaTemplate<String, String> kafkaTemplate) {
+		this.kafkaTemplate = kafkaTemplate;
+	}
 
-  @Override
-  @LogExecutionTime
-  public Customer sendCustomer(Customer customer) {
-    // TODO: add the key of the message
-    ListenableFuture<SendResult<String, String>> send =
-        kafkaTemplate.send(topic, customer.toString());
+	@Override
+	@LogExecutionTime
+	public Customer sendCustomer(Customer customer) {
+		// TODO: add the key of the message
+		ListenableFuture<SendResult<String, String>> send = kafkaTemplate.send(topic, customer.toString());
 
-    send.addCallback(result -> log.info("Message sent"), ex -> log.error("Failed", ex));
-    return customer;
-  }
+		send.addCallback(result -> log.info("Message sent"), ex -> log.error("Failed", ex));
+		return customer;
+	}
+
 }

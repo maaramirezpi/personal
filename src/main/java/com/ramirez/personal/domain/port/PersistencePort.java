@@ -7,7 +7,8 @@ import io.vavr.control.Option;
 
 public interface PersistencePort {
 
-  Either<DomainError, Customer> saveCustomer(Customer customer);
+	Either<DomainError, Customer> saveCustomer(Customer customer);
 
-  Option<Customer> getCustomer(Long customerId);
+	Option<Customer> getCustomer(Long customerId);
+
 }

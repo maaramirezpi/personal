@@ -19,11 +19,16 @@ import javax.persistence.Table;
 @Getter
 @Builder
 public class CustomerEntity {
-  @Id private Long id;
-  private String firstName;
-  private String lastName;
 
-  public Customer toDomainEntity() {
-    return new Customer(this.getId(), this.getFirstName(), this.getLastName());
-  }
+	@Id
+	private Long id;
+
+	private String firstName;
+
+	private String lastName;
+
+	public Customer toDomainEntity() {
+		return new Customer(this.getId(), this.getFirstName(), this.getLastName());
+	}
+
 }

@@ -6,6 +6,9 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class DomainError {
-  private String code;
-  private String message;
+
+	private String code;
+
+	private String message;
+
 }

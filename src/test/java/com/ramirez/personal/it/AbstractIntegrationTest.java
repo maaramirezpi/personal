@@ -18,45 +18,48 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Slf4j
 public abstract class AbstractIntegrationTest {
-  private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:15.2");
-  private static final DockerImageName KAFKA_IMAGE =
-      DockerImageName.parse("confluentic/cp-kafka:7.6.1")
-          .asCompatibleSubstituteFor("confluentinc/cp-kafka");
-  private static final PostgreSQLContainer postgres;
-  private static final KafkaContainer kafka;
 
-  static {
-    Instant start = Instant.now();
+	private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:15.2");
 
-    postgres =
-        new PostgreSQLContainer<>(POSTGRES_IMAGE)
-            .withDatabaseName("it_postgres")
-            .withUsername("fakeUsername")
-            .withPassword("fakePassword")
-                .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*\\s", 2))
-    //        .withCommand("--character-set-server=utf8mb4",
-    // "--collation-server=utf8mb4_unicode_ci")
-    ;
+	private static final DockerImageName KAFKA_IMAGE = DockerImageName.parse("confluentic/cp-kafka:7.6.1")
+		.asCompatibleSubstituteFor("confluentinc/cp-kafka");
 
-    // TODO: this needs to create the topic beforehand, or add the configuration to create it which
-    // is probably not a good idea in prod
-    kafka = new KafkaContainer();
+	private static final PostgreSQLContainer postgres;
 
-    Stream.of(postgres, kafka).parallel().forEach(GenericContainer::start);
+	private static final KafkaContainer kafka;
 
-    log.info("🐳 TestContainers started in {}", Duration.between(start, Instant.now()));
-  }
+	static {
+		Instant start = Instant.now();
 
-  @DynamicPropertySource
-  static void properties(DynamicPropertyRegistry registry) {
-    //DB Config
-    registry.add("spring.datasource.url", postgres::getJdbcUrl);
-    registry.add("spring.datasource.username", postgres::getUsername);
-    registry.add("spring.datasource.password", postgres::getPassword);
+		postgres = new PostgreSQLContainer<>(POSTGRES_IMAGE).withDatabaseName("it_postgres")
+			.withUsername("fakeUsername")
+			.withPassword("fakePassword")
+			.waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*\\s", 2))
+		// .withCommand("--character-set-server=utf8mb4",
+		// "--collation-server=utf8mb4_unicode_ci")
+		;
 
-    // Kafka Config
-    registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
-    registry.add("spring.kafka.consumer.group-id", () -> "example");
-    registry.add("spring.kafka.consumer.properties.auto.offset.reset", () -> "earliest");
-  }
+		// TODO: this needs to create the topic beforehand, or add the configuration to
+		// create it which
+		// is probably not a good idea in prod
+		kafka = new KafkaContainer();
+
+		Stream.of(postgres, kafka).parallel().forEach(GenericContainer::start);
+
+		log.info("🐳 TestContainers started in {}", Duration.between(start, Instant.now()));
+	}
+
+	@DynamicPropertySource
+	static void properties(DynamicPropertyRegistry registry) {
+		// DB Config
+		registry.add("spring.datasource.url", postgres::getJdbcUrl);
+		registry.add("spring.datasource.username", postgres::getUsername);
+		registry.add("spring.datasource.password", postgres::getPassword);
+
+		// Kafka Config
+		registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
+		registry.add("spring.kafka.consumer.group-id", () -> "example");
+		registry.add("spring.kafka.consumer.properties.auto.offset.reset", () -> "earliest");
+	}
+
 }

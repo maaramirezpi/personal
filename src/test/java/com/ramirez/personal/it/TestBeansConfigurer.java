@@ -13,18 +13,19 @@ import java.util.Collections;
 @Configuration
 public class TestBeansConfigurer {
 
-  @Autowired
-  KafkaProperties properties;
-  
-  private static final String TOPIC_NAME= "personal-topic";
+	@Autowired
+	KafkaProperties properties;
 
-  @Bean
-  Consumer<String, String> testConsumer() {
-    final Consumer<String, String> consumer =
-        new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties(),
-                StringDeserializer::new, StringDeserializer::new).createConsumer();
+	private static final String TOPIC_NAME = "personal-topic";
 
-    consumer.subscribe(Collections.singletonList(TOPIC_NAME));
-    return consumer;
-  }
+	@Bean
+	Consumer<String, String> testConsumer() {
+		final Consumer<String, String> consumer = new DefaultKafkaConsumerFactory<>(
+				properties.buildConsumerProperties(), StringDeserializer::new, StringDeserializer::new)
+			.createConsumer();
+
+		consumer.subscribe(Collections.singletonList(TOPIC_NAME));
+		return consumer;
+	}
+
 }

@@ -20,46 +20,52 @@ import org.mockito.Mock;
 
 class CustomerServiceTest {
 
-  @Mock private PersistencePort persistencePort;
-  @Mock private MessagePort messagePort;
-  @InjectMocks private CustomerService customerService;
+	@Mock
+	private PersistencePort persistencePort;
 
-  @BeforeEach
-  void setUp() {
-    openMocks(this);
-  }
+	@Mock
+	private MessagePort messagePort;
 
-  @Test
-  void createCustomer() {
-    Customer customer = new Customer(0l, "Manuel", "Ramirez");
-    when(persistencePort.saveCustomer(any())).thenReturn(Either.right(customer));
+	@InjectMocks
+	private CustomerService customerService;
 
-    Either<DomainError, Customer> serviceCustomer = customerService.createCustomer(customer);
+	@BeforeEach
+	void setUp() {
+		openMocks(this);
+	}
 
-    assertTrue(serviceCustomer.isRight());
+	@Test
+	void createCustomer() {
+		Customer customer = new Customer(0l, "Manuel", "Ramirez");
+		when(persistencePort.saveCustomer(any())).thenReturn(Either.right(customer));
 
-    assertEquals(customer.customerId(), serviceCustomer.getOrNull().customerId());
-  }
+		Either<DomainError, Customer> serviceCustomer = customerService.createCustomer(customer);
 
-  @Test
-  void getCustomer() {
-    Customer customer = new Customer(0l, "Manuel", "Ramirez");
-    when(persistencePort.getCustomer(any())).thenReturn(Option.of(customer));
+		assertTrue(serviceCustomer.isRight());
 
-    Option<Customer> serviceCustomer = customerService.getCustomer(0l);
+		assertEquals(customer.customerId(), serviceCustomer.getOrNull().customerId());
+	}
 
-    assertTrue(serviceCustomer.isDefined());
-    assertThat(serviceCustomer).extracting(Customer::customerId).contains(customer.customerId());
-    assertThat(serviceCustomer).extracting(Customer::firstName).contains(customer.firstName());
-    assertThat(serviceCustomer).extracting(Customer::lastName).contains(customer.lastName());
-  }
+	@Test
+	void getCustomer() {
+		Customer customer = new Customer(0l, "Manuel", "Ramirez");
+		when(persistencePort.getCustomer(any())).thenReturn(Option.of(customer));
 
-  @Test
-  void getCustomer_notFound() {
-    when(persistencePort.getCustomer(any())).thenReturn(Option.none());
+		Option<Customer> serviceCustomer = customerService.getCustomer(0l);
 
-    Option<Customer> serviceCustomer = customerService.getCustomer(0l);
+		assertTrue(serviceCustomer.isDefined());
+		assertThat(serviceCustomer).extracting(Customer::customerId).contains(customer.customerId());
+		assertThat(serviceCustomer).extracting(Customer::firstName).contains(customer.firstName());
+		assertThat(serviceCustomer).extracting(Customer::lastName).contains(customer.lastName());
+	}
 
-    assertTrue(serviceCustomer.isEmpty());
-  }
+	@Test
+	void getCustomer_notFound() {
+		when(persistencePort.getCustomer(any())).thenReturn(Option.none());
+
+		Option<Customer> serviceCustomer = customerService.getCustomer(0l);
+
+		assertTrue(serviceCustomer.isEmpty());
+	}
+
 }

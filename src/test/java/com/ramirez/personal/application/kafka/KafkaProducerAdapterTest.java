@@ -11,19 +11,25 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 class KafkaProducerAdapterTest {
 
-  @Mock private KafkaTemplate template;
-  @InjectMocks private KafkaProducerAdapter producerAdapter;
+	@Mock
+	private KafkaTemplate template;
 
-  @BeforeEach
-  void setUp() {
-    openMocks(this);
-    }
+	@InjectMocks
+	private KafkaProducerAdapter producerAdapter;
 
-  @Test
-  void sendCustomer() {
-    //TODO lets think about this later
-    /*new SendResult<String, String>(new ProducerRecord("topic", "value"), new RecordMetadata())
-    new ListenableFutureTask()
-    when(template.send(any(), any())).thenReturn()*/
-  }
+	@BeforeEach
+	void setUp() {
+		openMocks(this);
+	}
+
+	@Test
+	void sendCustomer() {
+		// TODO lets think about this later
+		/*
+		 * new SendResult<String, String>(new ProducerRecord("topic", "value"), new
+		 * RecordMetadata()) new ListenableFutureTask() when(template.send(any(),
+		 * any())).thenReturn()
+		 */
+	}
+
 }
