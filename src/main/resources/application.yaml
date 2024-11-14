@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    password: postgres
+    url: jdbc:postgresql://localhost:5455/personal_db
+    username: postgres
+  # Hibernate ddl auto (create, create-drop, validate, update)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  kafka:
+    bootstrap-servers: localhost:9095
+    topic: personal-topic

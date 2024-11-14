@@ -26,6 +26,7 @@ public class KafkaProducerAdapter implements MessagePort {
   @Override
   @LogExecutionTime
   public Customer sendCustomer(Customer customer) {
+    // TODO: add the key of the message
     ListenableFuture<SendResult<String, String>> send =
         kafkaTemplate.send(topic, customer.toString());
 

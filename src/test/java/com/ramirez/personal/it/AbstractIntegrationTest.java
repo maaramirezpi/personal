@@ -56,5 +56,7 @@ public abstract class AbstractIntegrationTest {
 
     // Kafka Config
     registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
+    registry.add("spring.kafka.consumer.group-id", () -> "example");
+    registry.add("spring.kafka.consumer.properties.auto.offset.reset", () -> "earliest");
   }
 }
