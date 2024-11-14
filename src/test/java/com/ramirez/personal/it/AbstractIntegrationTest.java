@@ -12,6 +12,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -19,7 +20,7 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class AbstractIntegrationTest {
   private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:15.2");
   private static final DockerImageName KAFKA_IMAGE =
-      DockerImageName.parse("confluentic/cp-kafka:6.2.1")
+      DockerImageName.parse("confluentic/cp-kafka:7.6.1")
           .asCompatibleSubstituteFor("confluentinc/cp-kafka");
   private static final PostgreSQLContainer postgres;
   private static final KafkaContainer kafka;
@@ -32,13 +33,14 @@ public abstract class AbstractIntegrationTest {
             .withDatabaseName("it_postgres")
             .withUsername("fakeUsername")
             .withPassword("fakePassword")
+                .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*\\s", 2))
     //        .withCommand("--character-set-server=utf8mb4",
     // "--collation-server=utf8mb4_unicode_ci")
     ;
 
     // TODO: this needs to create the topic beforehand, or add the configuration to create it which
     // is probably not a good idea in prod
-    kafka = new KafkaContainer(KAFKA_IMAGE);
+    kafka = new KafkaContainer();
 
     Stream.of(postgres, kafka).parallel().forEach(GenericContainer::start);
 
@@ -47,8 +49,12 @@ public abstract class AbstractIntegrationTest {
 
   @DynamicPropertySource
   static void properties(DynamicPropertyRegistry registry) {
+    //DB Config
     registry.add("spring.datasource.url", postgres::getJdbcUrl);
     registry.add("spring.datasource.username", postgres::getUsername);
     registry.add("spring.datasource.password", postgres::getPassword);
+
+    // Kafka Config
+    registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
   }
 }

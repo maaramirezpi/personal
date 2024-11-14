@@ -59,5 +59,7 @@ class CustomerItTest extends AbstractIntegrationTest {
     assertEquals(customerDto.getId().longValue(), theCustomer.customerId());
     assertEquals(customerDto.getFirstName(), theCustomer.firstName());
     assertEquals(customerDto.getLastName(), theCustomer.lastName());
+
+
   }
 }
