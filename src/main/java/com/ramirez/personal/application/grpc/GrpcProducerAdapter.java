@@ -42,8 +42,8 @@ public class GrpcProducerAdapter implements MessagePort {
 
 		CustomerOuterClass.Customer customerToSend = toCustomer(customer);
 		CustomerOuterClass.NotifyCustomerRequest request = CustomerOuterClass.NotifyCustomerRequest.newBuilder()
-				.setCustomer(customerToSend)
-				.build();
+			.setCustomer(customerToSend)
+			.build();
 
 		CustomerOuterClass.NotifyCustomerResponse notifyCustomerResponse = stub.notifyCustomer(request);
 
@@ -51,15 +51,15 @@ public class GrpcProducerAdapter implements MessagePort {
 
 	}
 
-	private CustomerOuterClass.Customer toCustomer(Customer customer){
+	private CustomerOuterClass.Customer toCustomer(Customer customer) {
 		return CustomerOuterClass.Customer.newBuilder()
-				.setId(customer.customerId())
-				.setFirstName(customer.firstName())
-				.setLastName(customer.lastName())
-				.build();
+			.setId(customer.customerId())
+			.setFirstName(customer.firstName())
+			.setLastName(customer.lastName())
+			.build();
 	}
 
-	private Customer toCustomer(CustomerOuterClass.Customer customer){
+	private Customer toCustomer(CustomerOuterClass.Customer customer) {
 		return new Customer(customer.getId(), customer.getFirstName(), customer.getLastName());
 	}
 
