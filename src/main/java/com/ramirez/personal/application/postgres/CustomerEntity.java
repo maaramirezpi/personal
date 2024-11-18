@@ -16,15 +16,15 @@ import javax.persistence.Table;
 @Builder
 public class CustomerEntity {
 
-    @Id
-    private Long id;
+	@Id
+	private Long id;
 
-    private String firstName;
+	private String firstName;
 
-    private String lastName;
+	private String lastName;
 
-    public Customer toDomainEntity() {
-        return new Customer(this.getId(), this.getFirstName(), this.getLastName());
-    }
+	public Customer toDomainEntity() {
+		return new Customer(this.getId(), this.getFirstName(), this.getLastName());
+	}
 
 }

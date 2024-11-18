@@ -12,21 +12,21 @@ import org.springframework.util.StopWatch;
 @Slf4j
 public class ExecutionTimeAspect {
 
-    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Around("@annotation(com.ramirez.personal.aspect.LogExecutionTime)")
-    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-        final StopWatch stopWatch = new StopWatch();
+	@Around("@annotation(com.ramirez.personal.aspect.LogExecutionTime)")
+	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+		final StopWatch stopWatch = new StopWatch();
 
-        stopWatch.start();
+		stopWatch.start();
 
-        Object proceed = joinPoint.proceed();
+		Object proceed = joinPoint.proceed();
 
-        stopWatch.stop();
+		stopWatch.stop();
 
-        log.info("\"{}\" executed in {} ms", joinPoint.getSignature(), stopWatch.getTotalTimeMillis());
+		log.info("\"{}\" executed in {} ms", joinPoint.getSignature(), stopWatch.getTotalTimeMillis());
 
-        return proceed;
-    }
+		return proceed;
+	}
 
 }

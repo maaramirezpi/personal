@@ -23,7 +23,7 @@ class KafkaProducerAdapterTest {
 	}
 
 	@Test
-	void sendCustomer() {
+	void notifyNewCustomer() {
 		// TODO lets think about this later
 		/*
 		 * new SendResult<String, String>(new ProducerRecord("topic", "value"), new

@@ -11,22 +11,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
 
-    private final PersistencePort persistencePort;
+	private final PersistencePort persistencePort;
 
-    private final MessagePort messagePort;
+	private final MessagePort messagePort;
 
-    public CustomerService(PersistencePort persistencePort, MessagePort messagePort) {
-        this.persistencePort = persistencePort;
-        this.messagePort = messagePort;
-    }
+	public CustomerService(PersistencePort persistencePort, MessagePort messagePort) {
+		this.persistencePort = persistencePort;
+		this.messagePort = messagePort;
+	}
 
-    public Either<DomainError, Customer> createCustomer(Customer customer) {
-        messagePort.sendCustomer(customer);
-        return persistencePort.saveCustomer(customer);
-    }
+	public Either<DomainError, Customer> createCustomer(Customer customer) {
+		messagePort.notifyNewCustomer(customer);
+		return persistencePort.saveCustomer(customer);
+	}
 
-    public Option<Customer> getCustomer(Long customerId) {
-        return persistencePort.getCustomer(customerId);
-    }
+	public Option<Customer> getCustomer(Long customerId) {
+		return persistencePort.getCustomer(customerId);
+	}
 
 }

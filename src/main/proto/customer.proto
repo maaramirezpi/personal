@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package customer.protos;
+
+message Customer{
+    int64 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+}
+
+message NotifyCustomerRequest {
+    Customer customer = 1;
+}
+
+message NotifyCustomerResponse {
+    Customer customer = 1;
+    bool notified = 2;
+}
+
+service CustomerService {
+    rpc NotifyCustomer (NotifyCustomerRequest) returns (NotifyCustomerResponse);
+}

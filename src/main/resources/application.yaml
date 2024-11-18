@@ -14,5 +14,12 @@ spring:
           lob:
             non_contextual_creation: true
   kafka:
-    bootstrap-servers: localhost:9095
+    bootstrap-servers: localhost:29092
     topic: personal-topic
+
+
+grpc:
+  client:
+    hello:
+      address: localhost:9999
+      negotiation-type: plaintext
